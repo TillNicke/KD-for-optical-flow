@@ -2,7 +2,6 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-
 # This is epxerimental and needs to be adjusted later!
 w,h = (320,256)
 o_m = h//3

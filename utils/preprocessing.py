@@ -27,7 +27,6 @@ def preprocessing_pwc(img_1, img_2):
 
 	images = [img1,img2]
 
-
 	for _i, _inputs in enumerate(images):
 		images[_i] = images[_i][:, :, ::-1]
 

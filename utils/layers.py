@@ -130,3 +130,9 @@ def warp(x, flo):
 	mask[mask > 0] = 1
 
 	return output * mask
+
+def warpImage(img_input,def_field):
+	B, C, H, W = img_input.size()
+	idenity_grid = F.affine_grid(torch.eye(2,3).unsqueeze(0).repeat(B,1,1),(B,1,H,W)).to(def_field.device)
+	img_output = F.grid_sample(img_input,idenity_grid + def_field.permute(0,2,3,1))
+	return img_output

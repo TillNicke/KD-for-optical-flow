@@ -25,8 +25,6 @@ def correlation_layer(displace_range, feat_moving, feat_fixed):
 def meanfield(ssd_distance ,img_fixed ,displace_range ,H ,W):
 
 	# crnt_dev = ssd_distance.device
-
-
 	cost = min_convolution(ssd_distance, displace_range, H, W)
 
 	# probabilistic output: compute the contributions weights of every discrete displacement pair for all positions

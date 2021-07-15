@@ -6,37 +6,34 @@ import torch.nn.functional as F
 w,h = (320,256)
 o_m = h//3
 o_n = w//3
-ogrid_xy = F.affine_grid(torch.eye(2,3).unsqueeze(0),(1,1,o_m,o_n)).view(1,1,-1,2)
+ogrid_xy = F.affine_grid(torch.eye(2,3).unsqueeze(0),(1,1,o_m,o_n)).view(1,1,-1,2)#.cuda()
 disp_range = 0.25#0.25
-displacement_width = 11#15#11#17
-shift_xy = F.affine_grid(disp_range*torch.eye(2,3).unsqueeze(0),(1,1,displacement_width,displacement_width)).view(1,1,-1,2)
+displacement_width = 15#15#11#17
+shift_xy = F.affine_grid(disp_range*torch.eye(2,3).unsqueeze(0),(1,1,displacement_width,displacement_width)).view(1,1,-1,2)#.cuda()
 
 grid_size = 32#25#30
-grid_xy = F.affine_grid(torch.eye(2,3).unsqueeze(0),(1,1,grid_size,grid_size)).view(1,-1,1,2)
+grid_xy = F.affine_grid(torch.eye(2,3).unsqueeze(0),(1,1,grid_size,grid_size)).view(1,-1,1,2)#.cuda()
 
 
 class OBELISK2d(nn.Module):
-	def __init__(self, chan = 16):
-
+	def __init__(self, chan=16):
 		super(OBELISK2d, self).__init__()
 		channels = chan
-		self.offsets = nn.Parameter(torch.randn(2 ,channels *2 ) *0.05)
-		self.layer0 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5, stride=2, bias=False, padding=2)
+		self.offsets = nn.Parameter(torch.randn(2, channels * 2, 2) * 0.05)
+		self.layer0 = nn.Conv2d(1, 4, 5, stride=2, bias=False, padding=2)
 		self.batch0 = nn.BatchNorm2d(4)
 
-		self.layer1 = nn.Conv2d(channels *4, channels *4, 1, bias=False, groups=1)
-		self.batch1 = nn.BatchNorm2d(channels *4)
-		self.layer2 = nn.Conv2d(channels *4, channels *2, 3, bias=False, padding=1)
-		self.batch2 = nn.BatchNorm2d(channels *2)
-		self.layer3 = nn.Conv2d(channels *2, channels *1, 1)
-
+		self.layer1 = nn.Conv2d(channels * 8, channels * 4, 1, bias=False, groups=1)
+		self.batch1 = nn.BatchNorm2d(channels * 4)
+		self.layer2 = nn.Conv2d(channels * 4, channels * 4, 3, bias=False, padding=1)
+		self.batch2 = nn.BatchNorm2d(channels * 4)
+		self.layer3 = nn.Conv2d(channels * 4, channels * 1, 1)
 
 	def forward(self, input_img):
-		img_in = F.avg_pool2d(input_img ,3 ,padding=1 ,stride=2)
+		img_in = F.avg_pool2d(input_img, 3, padding=1, stride=2)
 		img_in = F.relu(self.batch0(self.layer0(img_in)))
-		# img_in = F.relu(self.batch0(self.layer0(img_in)))
-		sampled = F.grid_sample(img_in ,ogrid_xy + self.offsets[0 ,:].view(1 ,-1 ,1 ,2)).view(1 ,-1 ,o_m ,o_n)
-		sampled -= F.grid_sample(img_in ,ogrid_xy + self.offsets[1 ,:].view(1 ,-1 ,1 ,2)).view(1 ,-1 ,o_m ,o_n)
+		sampled = F.grid_sample(img_in, ogrid_xy + self.offsets[0, :, :].view(1, -1, 1, 2)).view(1, -1, o_m, o_n)
+		sampled -= F.grid_sample(img_in, ogrid_xy + self.offsets[1, :, :].view(1, -1, 1, 2)).view(1, -1, o_m, o_n)
 
 		x = F.relu(self.batch1(self.layer1(sampled)))
 		x = F.relu(self.batch2(self.layer2(x)))

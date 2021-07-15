@@ -17,12 +17,12 @@ def load_flownet2():
 	parser.add_argument('--batch_size', '-b', type=int, default=8, help="Batch size")
 	parser.add_argument('--train_n_batches', type=int, default=-1,
 						help='Number of min-batches per epoch. If < 0, it will be determined by training_dataloader')
-	parser.add_argument('--crop_size', type=int, nargs='+', default=[256, 256],
+	parser.add_argument('--crop_size', type=int, nargs='+', default=[100, 100],
 						help="Spatial dimension to crop training samples for training")
 	parser.add_argument('--gradient_clip', type=float, default=None)
 	parser.add_argument('--schedule_lr_frequency', type=int, default=0, help='in number of iterations (0 for no schedule)')
 	parser.add_argument('--schedule_lr_fraction', type=float, default=10)
-	parser.add_argument("--rgb_max", type=float, default=255.)
+	parser.add_argument("--rgb_max", type=float, default=1.)
 
 	parser.add_argument('--number_workers', '-nw', '--num_workers', type=int, default=8)
 	parser.add_argument('--number_gpus', '-ng', type=int, default=-1, help='number of GPUs to use')
@@ -65,14 +65,14 @@ def load_flownet2():
 	args, unknown = parser.parse_known_args()
 	flownet = FlowNet2(args)
 	flownet.load_state_dict(torch.load("models/flownet2/weights/FlowNet2_checkpoint.pth.tar")['state_dict'])
-
+	flownet.eval()
 	return flownet
 
 def load_pwcnet():
 	pwc = PWCDCNet()
 	state_dict = torch.load("models/pwc_net/pwc_net_chairs.pth.tar")
 	pwc.load_state_dict(state_dict)
-
+	pwc.eval()
 	return pwc
 
 def init_weights(m):

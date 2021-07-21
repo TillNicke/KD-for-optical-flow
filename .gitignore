@@ -128,5 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-models/flownet2/
 models/pwc_net/
+Data/
+Tests/
+Paper/
+writing/

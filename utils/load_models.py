@@ -3,12 +3,15 @@ import torch
 import torch.nn as nn
 
 from models.flownet2_pytorch.flownet2_mph import *
-from models.pwc_net.models.PWCNet import PWCDCNet
+
+import warnings
+warnings.filterwarnings('ignore')
+
 
 def load_flownet2():
 	flow = FlowNet2()
 	state_dict = torch.load(
-		"models/flownet2/weights/FlowNet2_checkpoint.pth.tar")
+		"models/flownet2_pytorch/FlowNet2_checkpoint.pth.tar")
 	flow.load_state_dict(state_dict['state_dict'])
 	return flow
 

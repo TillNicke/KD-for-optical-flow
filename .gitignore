@@ -129,7 +129,8 @@ dmypy.json
 .pyre/
 
 models/pwc_net/
-Data/
+*.pth
+*.pth.tar
 Tests/
 Paper/
 writing/

@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 import numpy as np
 import cv2
 from math import ceil
@@ -44,14 +45,15 @@ def preprocessing_pwc(img_1, img_2):
 
 def preprocessing_flownet(img_1, img_2):
 	"""
-	Preprocessing function for PWC net.
+	Preprocessing function for FlowNet2.
 
 	img1: numpy.ndarray in shape of (H, W, C)
 	img2: numpy.ndarray in shape of (H, W, C)
 
 	return: torch.tensor in the	shape of (1, B, C, H, W)
 	"""
-
+    
+    
 	img1 = img_1.numpy().copy()
 	img2 = img_2.numpy().copy()
 
@@ -65,7 +67,7 @@ def preprocessing_flownet(img_1, img_2):
 
 	if img2.shape[2] == 1:
 		img2 = np.concatenate([img2,img2,img2], 2)
-
+    
 	images = [img1, img2]
 	images = np.array(images).transpose(3, 0, 1, 2)
 	return torch.from_numpy(images.astype(np.float32)).unsqueeze(0)

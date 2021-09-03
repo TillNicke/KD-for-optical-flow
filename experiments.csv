@@ -1,0 +1,9 @@
+,Unnamed: 0.1,epochs,optim,mode,mean dice,unwarped dice,date,loss,time,Eval mean dice,batch size,learning rate
+0,,100,"Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.0002
+    weight_decay: 0
+)",label loss,,tensor(0.3238),,label loss,02.09.21 17:15,tensor(0.3453),4.0,0.0002

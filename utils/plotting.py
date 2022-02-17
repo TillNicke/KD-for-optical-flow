@@ -20,9 +20,9 @@ def showFlow(def_x):
 def overlaySegment(gray1,seg1,flag=False):
     H, W = seg1.squeeze().size()
     colors=torch.FloatTensor([0,0,0,199,67,66,225,140,154,78,129,170,45,170,170,240,110,38,111,163,91,235,175,86,202,255,52,162,0,183]).view(-1,3)/255.0
-    segs1 = labelMatrixOneHot(seg1.unsqueeze(0),8)
+    segs1 = labelMatrixOneHot(seg1.unsqueeze(0),3)
 
-    seg_color = torch.mm(segs1.view(8,-1).t(),colors[:8,:]).view(H,W,3)
+    seg_color = torch.mm(segs1.view(3,-1).t(),colors[1:4,:]).view(H,W,3)
     alpha = torch.clamp(1.0 - 0.5*(seg1>0).float(),0,1.0)
 
     overlay = (gray1*alpha).unsqueeze(2) + seg_color*(1.0-alpha).unsqueeze(2)

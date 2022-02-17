@@ -44,30 +44,26 @@ def preprocessing_pwc(img_1, img_2):
 	return torch.cat(images,1)
 
 def preprocessing_flownet(img_1, img_2):
-	"""
-	Preprocessing function for FlowNet2.
+    """
+    Preprocessing function for FlowNet2.
 
-	img1: numpy.ndarray in shape of (H, W, C)
-	img2: numpy.ndarray in shape of (H, W, C)
+    img1: numpy.ndarray in shape of (H, W, C)
+    img2: numpy.ndarray in shape of (H, W, C)
 
-	return: torch.tensor in the	shape of (1, B, C, H, W)
-	"""
-    
-    
-	img1 = img_1.numpy().copy()
-	img2 = img_2.numpy().copy()
+    return: torch.tensor in the	shape of (1, B, C, H, W)
+    """
 
-	if img1.max() <= 1.0:
-		img1 = img1 * 255
-	if img2.max() <= 1.0:
-		img2 = img2 * 255
 
-	if img1.shape[2] == 1:
-		img1 = np.concatenate([img1,img1,img1], 2)
+    img1 = img_1.numpy().copy()
+    img2 = img_2.numpy().copy()
 
-	if img2.shape[2] == 1:
-		img2 = np.concatenate([img2,img2,img2], 2)
-    
-	images = [img1, img2]
-	images = np.array(images).transpose(3, 0, 1, 2)
-	return torch.from_numpy(images.astype(np.float32)).unsqueeze(0)
+
+    if img1.shape[2] == 1:
+        img1 = np.concatenate([img1,img1,img1], 2)
+
+    if img2.shape[2] == 1:
+        img2 = np.concatenate([img2,img2,img2], 2)
+
+    images = [img1, img2]
+    images = np.array(images).transpose(3, 0, 1, 2)
+    return torch.from_numpy(images.astype(np.float32)).unsqueeze(0) * 255

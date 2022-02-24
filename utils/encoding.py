@@ -2,6 +2,13 @@ import torch
 from skimage.metrics import hausdorff_distance
 
 def dice_coeff(outputs, labels, max_label):
+    """
+    estimating the dice similarity coefficient between predicted and reference labels
+
+    outputs: predicted segmentation
+    labels: reference seg
+    max_label: int. maximum number of labels
+    """
     dice = torch.FloatTensor(max_label-1).fill_(0)
     for label_num in range(1, max_label):
         iflat = (outputs==label_num).reshape(-1).float()
@@ -11,6 +18,9 @@ def dice_coeff(outputs, labels, max_label):
     return dice
 
 def labelMatrixOneHot(segmentation, label_num):
+    """
+    generate a oneHot representation of a segmenation
+    """
     B, H, W = segmentation.size()
     values = segmentation.view(B,1,H,W).expand(B,label_num,H,W).to(segmentation.device)
     linspace = torch.linspace(0, label_num-1, label_num).long().view(1,label_num,1,1).expand(B,label_num,H,W).to(segmentation.device)

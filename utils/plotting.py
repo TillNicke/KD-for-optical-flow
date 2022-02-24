@@ -5,6 +5,9 @@ import torch
 from utils.encoding import labelMatrixOneHot
 
 def showFlow(def_x):
+    """
+    generate RGB image of Flow
+    """
     x = def_x.squeeze().numpy()[0,:,:]
     y = def_x.squeeze().numpy()[1,:,:]
     #show flow map for numpy
@@ -18,6 +21,9 @@ def showFlow(def_x):
     return rgb
 
 def overlaySegment(gray1,seg1,flag=False):
+    """
+	generate RGB overlay of segmenation and image for viz
+    """
     H, W = seg1.squeeze().size()
     colors=torch.FloatTensor([0,0,0,199,67,66,225,140,154,78,129,170,45,170,170,240,110,38,111,163,91,235,175,86,202,255,52,162,0,183]).view(-1,3)/255.0
     segs1 = labelMatrixOneHot(seg1.unsqueeze(0),3)

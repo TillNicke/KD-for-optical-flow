@@ -10,6 +10,7 @@ warnings.filterwarnings('ignore')
 
 
 def load_flownet2():
+    """load flownet2 instance"""
     flow = FlowNet2()
     state_dict = torch.load(
         "models/flownet2_pytorch/FlowNet2_checkpoint.pth.tar")
@@ -17,6 +18,7 @@ def load_flownet2():
     return flow
 
 def load_pwcnet():
+    """load PWC-Net instance"""
     pwc = PWCDCNet()
     state_dict = torch.load("models/pwc_net/pwc_net_chairs.pth.tar")
     pwc.load_state_dict(state_dict)
@@ -25,6 +27,7 @@ def load_pwcnet():
     return pwc
 
 def init_weights(m):
+    """Set bias to 0"""
     if isinstance(m, nn.Linear) or isinstance(m, nn.Conv3d) or isinstance(m, nn.ConvTranspose2d) or isinstance(m, nn.Conv2d) or isinstance(m, nn.Conv1d):
         nn.init.xavier_normal(m.weight)
         if m.bias is not None:
